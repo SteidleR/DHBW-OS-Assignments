@@ -12,7 +12,6 @@
 #define BUFF_SIZE 64
 
 MODULE_LICENSE("Dual BSD/GPL");
-MODULE_AUTHOR("Robin Steidle");
 MODULE_DESCRIPTION("RAM disk driver");
 
 /* Declaration of memory.c functions */
@@ -35,25 +34,23 @@ struct file_operations memory_fops = {
 /* Declaration of the init and exit functions */
 module_init(memory_init);
 module_exit(memory_exit);
-/* Global variables of the driver */
-/* Major number */
-int memory_major = 60;
-/* Buffer to store data */
-char *memory_buffer;
+
+
+int memory_major = 60;  // major number
+char *memory_buffer;  // buffer for storing data
 
 static int Device_Open = 0;  // prevent multiple access to device
 
 int memory_init(void) {
     int result;
-    /* Registering device */
-    result = register_chrdev(memory_major, "memory", &memory_fops);
+
+    result = register_chrdev(memory_major, "memory", &memory_fops);  // registering device
     if (result < 0) {
         printk("<1>memory: cannot obtain major number %d\n", memory_major);
         return result;
     }
 
-    /* Allocating memory for the buffer */
-    memory_buffer = kmalloc(BUFF_SIZE, GFP_KERNEL);
+    memory_buffer = kmalloc(BUFF_SIZE, GFP_KERNEL);  // allocating memory
     if (!memory_buffer) {
         result = -ENOMEM;
         goto fail;
@@ -67,18 +64,17 @@ int memory_init(void) {
 }
 
 void memory_exit(void) {
-    /* Freeing the major number */
-    unregister_chrdev(memory_major, "memory");
-    /* Freeing buffer memory */
+    unregister_chrdev(memory_major, "memory");  // freeing major number
+
     if (memory_buffer) {
-        kfree(memory_buffer);
+        kfree(memory_buffer);  // freeing allocated memory
     }
     printk("<1>Removing memory module\n");
 }
 
 int memory_open(struct inode *inode, struct file *filp) {
     if (Device_Open)
-        return -EBUSY;
+        return -EBUSY;  // device already opened
 
     Device_Open++;
     try_module_get(THIS_MODULE);
@@ -87,7 +83,7 @@ int memory_open(struct inode *inode, struct file *filp) {
 }
 
 int memory_release(struct inode *inode, struct file *filp) {
-    Device_Open--;
+    Device_Open--;  // close device
     module_put(THIS_MODULE);
     return 0;
 }
@@ -113,7 +109,7 @@ ssize_t memory_read(struct file *filp, char *buf, size_t count, loff_t *f_pos) {
 }
 
 ssize_t memory_write(struct file *filp, const char *buff, size_t count, loff_t *f_pos) {
-    copy_from_user(memory_buffer,buff,count);
+    copy_from_user(memory_buffer,buff,count);  // copy user input string into the buffer
     return count;
 }
 

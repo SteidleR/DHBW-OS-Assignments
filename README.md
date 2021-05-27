@@ -5,7 +5,7 @@
 STATUS: Full Points
 
 Usage:
-* compile vulnerable program: ```[placeholder]```
+* compile vulnerable program: ```gcc -z execstack -fno-stack-protector vulnerable.c -o vulnerable```
 
 ## Signal Handler
 STATUS: Full Points
