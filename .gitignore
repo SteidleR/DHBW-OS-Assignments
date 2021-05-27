@@ -11,3 +11,6 @@
 *.o
 *.symvers
 *.order
+
+# vs code folder
+.vscode/
