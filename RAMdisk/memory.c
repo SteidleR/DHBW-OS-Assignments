@@ -12,6 +12,9 @@
 #define BUFF_SIZE 64
 
 MODULE_LICENSE("Dual BSD/GPL");
+MODULE_AUTHOR("Robin Steidle");
+MODULE_DESCRIPTION("RAM disk driver");
+
 /* Declaration of memory.c functions */
 int memory_open(struct inode *inode, struct file *filp);
 int memory_release(struct inode *inode, struct file *filp);
@@ -26,7 +29,7 @@ struct file_operations memory_fops = {
     read: memory_read,
     write: memory_write,
     open: memory_open,
-    release: memory_release,
+    release: memory_release
 };
 
 /* Declaration of the init and exit functions */
@@ -38,6 +41,7 @@ int memory_major = 60;
 /* Buffer to store data */
 char *memory_buffer;
 
+static int Device_Open = 0;  // prevent multiple access to device
 
 int memory_init(void) {
     int result;
@@ -63,23 +67,29 @@ int memory_init(void) {
 }
 
 void memory_exit(void) {
- /* Freeing the major number */
- unregister_chrdev(memory_major, "memory");
- /* Freeing buffer memory */
- if (memory_buffer) {
-    kfree(memory_buffer);
- }
- printk("<1>Removing memory module\n");
+    /* Freeing the major number */
+    unregister_chrdev(memory_major, "memory");
+    /* Freeing buffer memory */
+    if (memory_buffer) {
+        kfree(memory_buffer);
+    }
+    printk("<1>Removing memory module\n");
 }
 
 int memory_open(struct inode *inode, struct file *filp) {
- /* Success */
- return 0;
+    if (Device_Open)
+        return -EBUSY;
+
+    Device_Open++;
+    try_module_get(THIS_MODULE);
+
+    return 0;
 }
 
 int memory_release(struct inode *inode, struct file *filp) {
- /* Success */
- return 0;
+    Device_Open--;
+    module_put(THIS_MODULE);
+    return 0;
 }
 
 ssize_t memory_read(struct file *filp, char *buf, size_t count, loff_t *f_pos) {
