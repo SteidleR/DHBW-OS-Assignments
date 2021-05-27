@@ -4,6 +4,9 @@
 ## Buffer Overflow
 STATUS: Full Points
 
+Usage:
+* compile vulnerable program: ```[placeholder]```
+
 ## Signal Handler
 STATUS: Full Points
 
