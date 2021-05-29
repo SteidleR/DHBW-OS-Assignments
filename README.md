@@ -13,9 +13,10 @@ STATUS: Full Points
 ## RAM disk driver
 STATUS: WIP
 
-List of useful pages: [here](RAMdisk/docs_links.txt)
-
 * prepare for module installation: ```make prepare```
 * create and install module: ```make all```
 * clean module: ```make clean```
 * update module (if already installed): ```make update```
+
+# Shared Library
+STATUS: WIP

@@ -16,3 +16,6 @@ update: clean all
 prepare:
 	sudo mknod /dev/memory c 60 0
 	sudo chmod 666 /dev/memory
+
+client:
+	echo WIP
