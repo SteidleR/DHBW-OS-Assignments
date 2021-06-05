@@ -83,4 +83,9 @@ int srandomInt(MT* rand, int lower, int upper) {
     return (r % (upper-lower)) + lower;
 }
 
+int randomInt(int lower, int upper) {
+    MT r = seed(clock()^time(0));
+    return srandomInt(&r, lower, upper);
+}
+
 void main() {}

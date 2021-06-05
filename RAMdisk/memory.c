@@ -1,5 +1,5 @@
 #define LICENSE "Dual BSD/GPL"
-#define VERSION "0.01"
+#define VERSION "0.05"
 #define AUTHOR "Robin Steidle"
 
 #include <linux/init.h>
@@ -13,8 +13,9 @@
 #include <linux/fcntl.h> /* O_ACCMODE */
 #include <linux/seq_file.h> // seq_printf()
 #include <asm/uaccess.h> /* copy_from/to_user */
+#include <linux/ioctl.h> /* for ioctl */
 
-#define BUFF_SIZE 64
+#define BUFF_SIZE 512
 
 MODULE_LICENSE(LICENSE);
 MODULE_VERSION(VERSION);
@@ -26,7 +27,6 @@ int memory_open(struct inode *inode, struct file *filp);
 int memory_release(struct inode *inode, struct file *filp);
 ssize_t memory_read(struct file *filp, char *buf, size_t count, loff_t *f_pos);
 ssize_t memory_write(struct file *filp, const char *buf, size_t count, loff_t *f_pos);
-void memory_show_fdinfo(struct seq_file *m, struct file *f);
 
 void memory_exit(void);
 int memory_init(void);
@@ -48,7 +48,7 @@ module_exit(memory_exit);
 int memory_major = 60;  // major number
 char *memory_buffer;  // buffer for storing data
 
-static int Device_Open = 0;  // prevent multiple access to device
+static int device_open = 0;  // prevent multiple access to device
 
 int memory_init(void) {
     int result;
@@ -82,17 +82,17 @@ void memory_exit(void) {
 }
 
 int memory_open(struct inode *inode, struct file *filp) {
-    if (Device_Open)
+    if (device_open)
         return -EBUSY;  // device already opened
 
-    Device_Open++;
+    device_open++;
     try_module_get(THIS_MODULE);
 
     return 0;
 }
 
 int memory_release(struct inode *inode, struct file *filp) {
-    Device_Open--;  // close device
+    device_open--;  // close device
     module_put(THIS_MODULE);
     return 0;
 }

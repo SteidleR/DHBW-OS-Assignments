@@ -9,4 +9,8 @@ library:
 	$(CC) $(LIB).o -shared  -o lib$(LIB).so
 
 client:
-	$(CC) client.c -o client.o -l$(LIB) -L.
+	$(CC) client.c -l$(LIB) -L. -o client.o 
+
+clean:
+	rm $(LIB).o lib$(LIB).so
+	rm client.o

@@ -1,0 +1,17 @@
+---- Installation: ----
+make prepare 
+make
+
+
+---- Remove Driver ----
+make clean
+
+
+---- Overview over the RAM Disk Driver ----
+
+
+
+---- Sources: ----
+https://www.kernel.org/doc/html/v5.8/filesystems/vfs.html
+https://www.xml.com/ldd/chapter/book/
+

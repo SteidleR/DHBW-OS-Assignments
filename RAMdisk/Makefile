@@ -10,6 +10,7 @@ all:
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
 	sudo rmmod memory.ko
+	sudo rm /dev/memory
 
 update: clean all
 
@@ -18,4 +19,4 @@ prepare:
 	sudo chmod 666 /dev/memory
 
 client:
-	echo WIP
+	gcc client.c -o client.o

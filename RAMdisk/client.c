@@ -6,21 +6,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 int main() {
-        int fd, rtn;
-        fd = open("/dev/memory", O_RDWR);
-        if (fd == -1) {
-                perror("open /dev/chardev");
-                exit(EXIT_FAILURE);
-        }
+    int fd, rtn;
+    fd = open("/dev/memory", O_RDWR);
+    if (fd == -1) {
+            perror("open /dev/memory");
+            exit(EXIT_FAILURE);
+    }
 
-        printf("Writing to /dev/memory\n");
-        char c[16];
-        strcpy(c, "hello World!");
-        write(fd, &c, 12);
+    printf("Writing to /dev/memory\n");
+    char c[512];
+    strcpy(c, "hello World! Are you okay?");
+    write(fd, &c, 512);
 
-        printf("Reading from /dev/memory: \n");
-        read(fd, &c, 1);
-        printf("%s", c);
-        exit(EXIT_SUCCESS);
+    printf("Reading from /dev/memory: \n");
+    read(fd, &c, 1);
+    printf("%s", c);
+    exit(EXIT_SUCCESS);
 }
