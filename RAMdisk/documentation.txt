@@ -2,13 +2,19 @@
 make prepare 
 make
 
+make update  // if already installed
 
 ---- Remove Driver ----
 make clean
 
+---- Compile Client ----
+make client
 
 ---- Overview over the RAM Disk Driver ----
+current size: 512b
+change size: change BUFF_SIZE value in memory.c 
 
+usage: client.c shows how to use it as a file in c
 
 
 ---- Sources: ----
